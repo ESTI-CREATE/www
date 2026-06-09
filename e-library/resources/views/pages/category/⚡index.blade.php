@@ -61,114 +61,43 @@ new class extends Component
                 <flux:table.column sortable :sorted="$sortBy === 'created_at'" :direction="$sortDirection" wire:click="sort('created_at')">Created At</flux:table.column>
                 <flux:table.column></flux:table.column>
             </flux:table.columns>
-            <flux:table :paginate="$this->orders">
-    <flux:table.columns>
-        <flux:table.column>Customer</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'date'" :direction="$sortDirection" wire:click="sort('date')">Date</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'status'" :direction="$sortDirection" wire:click="sort('status')">Status</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'amount'" :direction="$sortDirection" wire:click="sort('amount')">Amount</flux:table.column>
-    </flux:table.columns>
-    
-    <flux:table.rows>
-        <flux:table :paginate="$this->orders">
-    <flux:table.columns>
-        <flux:table.column>Customer</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'date'" :direction="$sortDirection" wire:click="sort('date')">Date</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'status'" :direction="$sortDirection" wire:click="sort('status')">Status</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'amount'" :direction="$sortDirection" wire:click="sort('amount')">Amount</flux:table.column>
-    </flux:table.columns>
 
-    <flux:table.rows>
-        <flux:table :paginate="$this->orders">
-    <flux:table.columns>
-        <flux:table.column>Customer</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'date'" :direction="$sortDirection" wire:click="sort('date')">Date</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'status'" :direction="$sortDirection" wire:click="sort('status')">Status</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'amount'" :direction="$sortDirection" wire:click="sort('amount')">Amount</flux:table.column>
-    </flux:table.columns>
+            <flux:table.rows>
+                @foreach ($this->categories as $category)
+                    <flux:table.row :key="$category->id">
+                        
+                        <flux:table.cell class="flex items-center gap-3">
+                            {{ $category->name }}
+                        </flux:table.cell>
 
-    <flux:table.rows>
-        @foreach ($this->orders as $order)
-            <flux:table.row :key="$order->id">
-                <flux:table.cell class="flex items-center gap-3">
-                    <flux:avatar size="xs" src="{{ $order->customer_avatar }}" />
+                        <flux:table.cell class="text-zinc-500 dark:text-zinc-400">
+                            {{ $category->description ?? '-' }}
+                        </flux:table.cell>
 
-                    {{ $order->customer }}
-                </flux:table.cell>
+                        <flux:table.cell class="whitespace-nowrap">{{ $category->created_at->diffForHumans() }}</flux:table.cell>
 
-                <flux:table.cell class="whitespace-nowrap">{{ $order->date }}</flux:table.cell>
+                        <flux:table.cell>
 
-                <flux:table.cell>
-                    <flux:badge size="sm" :color="$order->status_color" inset="top bottom">{{ $order->status }}</flux:badge>
-                </flux:table.cell>
 
-                <flux:table.cell variant="strong">{{ $order->amount }}</flux:table.cell>
+                            <flux:dropdown>
+                                <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" inset="top bottom"></flux:button>
 
-                <flux:table.cell>
-                    <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" inset="top bottom"></flux:button>
-                </flux:table.cell>
-            </flux:table.row>
-        @endforeach
-    </flux:table.rows>
-</flux:table>
+                                <flux:menu>
+                                    <flux:menu.item icon="pencil" wire:click="edit({{ $category->id }})">Edit</flux:menu.item>
 
-<flux:table :paginate="$this->orders">
-    <flux:table.columns>
-        <flux:table.column>Customer</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'date'" :direction="$sortDirection" wire:click="sort('date')">Date</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'status'" :direction="$sortDirection" wire:click="sort('status')">Status</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'amount'" :direction="$sortDirection" wire:click="sort('amount')">Amount</flux:table.column>
-    </flux:table.columns>
+                                    <flux:menu.separator />
 
-    <flux:table.rows>
-        <flux:table.column>Customer</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'date'" :direction="$sortDirection" wire:click="sort('date')">Date</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'status'" :direction="$sortDirection" wire:click="sort('status')">Status</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'amount'" :direction="$sortDirection" wire:click="sort('amount')">Amount</flux:table.column>
-    </flux:table.columns>
-    <flux:table.rows>
-        <flux:table :paginate="$this->orders">
-    <flux:table.columns>
-        <flux:table.column>Customer</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'date'" :direction="$sortDirection" wire:click="sort('date')">Date</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'status'" :direction="$sortDirection" wire:click="sort('status')">Status</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'amount'" :direction="$sortDirection" wire:click="sort('amount')">Amount</flux:table.column>
-    </flux:table.columns>
+                                    {{-- <flux:menu.item variant="danger" icon="trash" wire:click="$dispatch('confirm-delete', id: $category->id)">Delete</flux:menu.item> --}}
+                                    <flux:menu.item variant="danger" icon="trash" wire:click="$dispatch('confirm-delete', {id: {{ $category->id }}})">Delete</flux:menu.item>
+                                </flux:menu>
+                            </flux:dropdown>
+                        </flux:table.cell>
+                    </flux:table.row>
+                @endforeach
+            </flux:table.rows>
+        </flux:table>
 
-    <flux:table.rows>
-        @foreach ($this->orders as $order)
-            <flux:table.row :key="$order->id">
-                <flux:table.cell class="flex items-center gap-3">
-                    <flux:avatar size="xs" src="{{ $order->customer_avatar }}" />
-                    {{ $order->customer }}
-                </flux:table.cell>
-                <flux:table.cell class="whitespace-nowrap">{{ $order->date }}</flux:table.cell>
-                <flux:table.cell>
-                    <flux:badge size="sm" :color="$order->status_color" inset="top bottom">{{ $order->status }}</flux:badge>
-                </flux:table.cell>
-                <flux:table.cell variant="strong">{{ $order->amount }}</flux:table.cell>
-                <flux:table.cell>
-                    <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" inset="top bottom"></flux:button>
-                </flux:table.cell>
-            </flux:table.row>
-        @endforeach
-    </flux:table.rows>
-</flux:table>
-        @foreach ($this->orders as $order)
-            <flux:table.row :key="$order->id">
-                <flux:table.cell class="flex items-center gap-3">
-                    <flux:avatar size="xs" src="{{ $order->customer_avatar }}" />
-                    {{ $order->customer }}
-                </flux:table.cell>
-                <flux:table.cell class="whitespace-nowrap">{{ $order->date }}</flux:table.cell>
-                <flux:table.cell>
-                    <flux:badge size="sm" :color="$order->status_color" inset="top bottom">{{ $order->status }}</flux:badge>
-                </flux:table.cell>
-                <flux:table.cell variant="strong">{{ $order->amount }}</flux:table.cell>
-                <flux:table.cell>
-                    <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" inset="top bottom"></flux:button>
-                </flux:table.cell>
-            </flux:table.row>
-        @endforeach
-    </flux:table.rows>
-</flux:table>
+
+    </div>
+   
+</div>
